@@ -1,6 +1,9 @@
 package ru.mirea;
 
 import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JMenu;
 import javax.swing.JFrame;
@@ -12,9 +15,6 @@ import javax.swing.JScrollPane;
 public class App extends JFrame {
   private static final int WINDOW_WIDTH = 1000;
   private static final int WINDOW_HEIGHT = 600;
-
-  private static final Font textFont = new Font("Free Mono", Font.PLAIN, 18);
-//  private static String textColor = "Black";
 
   /**
    * Создаёт окно приложения
@@ -32,14 +32,18 @@ public class App extends JFrame {
     JMenu fontColor = new JMenu("Color");
 
     /* Шрифты, которые можно выбрать */
-    JMenuItem family1 = new JMenuItem("Free Mono");
-    JMenuItem family2 = new JMenuItem("Ubuntu Mono");
-    JMenuItem family3 = new JMenuItem("Liberation Serif");
+    JMenuItem[] families = {
+      new JMenuItem("Free Mono"),
+      new JMenuItem("Ubuntu Mono"),
+      new JMenuItem("Liberation Serif")
+    };
 
     /* Различные цвета текста */
-    JMenuItem color1 = new JMenuItem("Red");
-    JMenuItem color2 = new JMenuItem("Blue");
-    JMenuItem color3 = new JMenuItem("Black");
+    JMenuItem[] colors = {
+      new JMenuItem("Red"),
+      new JMenuItem("Blue"),
+      new JMenuItem("Black")
+    };
 
     /* Текстовое поле */
     JTextArea textArea = new JTextArea();
@@ -54,17 +58,66 @@ public class App extends JFrame {
     fontOption.setFont(new Font("Free Mono", Font.BOLD, 15));
     fontColor.setFont(new Font("Free Mono", Font.BOLD, 15));
 
-    /* Расположение текстового поля и его размеры, и ещё установка шрифта */
-    textArea.setFont(textFont);
+    /* Установка шрифта, переноса слов */
+    textArea.setFont(new Font("Free Mono", Font.PLAIN, 18));
+    textArea.setLineWrap(true);
+    textArea.setWrapStyleWord(true);
+
+    /* Расположение и размеры текстового поля */
     scrollBar.setBounds(0, menuBar.getHeight(), WINDOW_WIDTH, WINDOW_HEIGHT - menuBar.getHeight());
 
-    fontOption.add(family1);
-    fontOption.add(family2);
-    fontOption.add(family3);
+    /* Возможность сменить шрифт */
+    for (JMenuItem item : families) {
+      /* Выполнение действия при нажатии на пункт меню */
+      item.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          String fontName = item.getText();       // название шрифта
+          textArea.setFont(new Font(fontName, Font.PLAIN, 18));
+        }
+      });
 
-    fontColor.add(color1);
-    fontColor.add(color2);
-    fontColor.add(color3);
+      fontOption.add(item);
+    }
+
+    /* Возможность сменить цвет текста */
+    for (JMenuItem item : colors) {
+      /* Выполнение действия при нажатии на пункт меню */
+      item.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          String fontName = item.getText();       // название шрифта
+          textArea.setFont(new Font(fontName, Font.PLAIN, 18));
+        }
+      });
+
+      fontOption.add(item);
+    }
+
+    /* Возможность сменить цвет текста */
+    for (JMenuItem item : colors) {
+      item.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          String color = item.getText();
+          Color colorToSet;
+
+          if (color.equals("Red")) {
+            colorToSet = Color.RED;
+          }
+          else if (color.equals("Blue")) {
+            colorToSet = Color.BLUE;
+          }
+          else {
+            colorToSet = Color.BLACK;
+          }
+
+          textArea.setForeground(colorToSet);
+        }
+      });
+
+      fontColor.add(item);
+    }
 
     menuBar.add(fontOption);
     menuBar.add(fontColor);
